@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react'
+import { useState } from 'react';
+import { MdManageAccounts } from 'react-icons/md';
+import { IoIosArrowDown } from 'react-icons/io';
+import { IoIosArrowForward } from 'react-icons/io';
 import { Link } from 'react-router-dom';
-import { RiDashboardHorizontalFill } from 'react-icons/ri';
-import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 
-const DashboardModule = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
+function ManageClass() {
+      const [isExpanded, setIsExpanded] = useState(false);
+    
   return (
     <div className=''>
       {/* Clickable Header */}
@@ -13,8 +15,8 @@ const DashboardModule = () => {
         className='rounded hover:shadow hover:bg-blue-500 p-2 m-1 cursor-pointer flex items-center'
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <RiDashboardHorizontalFill className='w-6 h-5 mr-2' />
-        <span className='flex-grow'> Dashboard</span>
+        <MdManageAccounts  className='w-6 h-5 mr-2' />
+        <span className='flex-grow'> Manage Class</span>
         {isExpanded ? (
           <IoIosArrowDown className='w-4 h-4' />
         ) : (
@@ -26,16 +28,16 @@ const DashboardModule = () => {
       {isExpanded && (
         <div className='ml-12'>
           <Link 
-            to="analytics" 
+            to="addgrade" 
             className='block  rounded hover:bg-blue-500  text-center'
           >
-            Analytics
+            Add Grade
           </Link>
           
         </div>
       )}
     </div>
-  );
-};
+)
+}
 
-export default DashboardModule;
+export default ManageClass

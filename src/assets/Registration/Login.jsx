@@ -20,60 +20,155 @@ function Login() {
     // function validatePassword(password) {
     //    return password.length >= 6test(password);
     // }
-    const navigate = useNavigate()
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent page reload
-   if (!validateEmail(email)) {
-     toast.error("Please enter a valid email address.");
-     return;
-   }
-  //  if (!validatePassword(password)) {
-  //    toast.error("Password must be at least 6 characters long, contain at least one uppercase letter, one lowercase letter, and one special character.");
+  //   const navigate = useNavigate()
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault(); // Prevent page reload
+  //  if (!validateEmail(email)) {
+  //    toast.error("Please enter a valid email address.");
   //    return;
   //  }
-   setError
-    try {
-      // Show loading state
-      const loadingToast = toast.loading("Logging in...");
+  // //  if (!validatePassword(password)) {
+  // //    toast.error("Password must be at least 6 characters long, contain at least one uppercase letter, one lowercase letter, and one special character.");
+  // //    return;
+  // //  }
+  //  setError
+  //   try {
+  //     // Show loading state
+  //     const loadingToast = toast.loading("Logging in...");
        
-      // Use the configured axiosInstance
-      const response = await axiosInstance.post("/api/v1/auth/superadmin/login", { 
-        email, 
-        password 
-      });
+  //     // Use the configured axiosInstance
+  //     const response = await axiosInstance.post("/api/v1/auth/superadmin/login", { 
+  //       email, 
+  //       password 
+  //     });
+
+  //     // Validate response structure
+  //   if (!response.data || !response.data.token) {
+  //     throw new Error("Invalid response format from server");
+  //   }
+    
+  //   // Store the token received from backend
+  //   TokenManager.setToken(response.data.token);
       
-      // Success handling
-      localStorage.setItem("authToken", response.data.token);
+
       
-      toast.dismiss(loadingToast);
-      toast.success("Login successful! Redirecting...");
+  //     toast.dismiss(loadingToast);
+  //     toast.success("Login successful! Redirecting...");
       
-      setTimeout(() => navigate("/dashboard"), 2000);
-      // //send a request
-      // const response = await axios.post("/api/v1/auth/superadmin/login",{ email, password },
-      // { headers: { "Content-Type": "application/json"}}                                     
-      // );
-      // // Store token securely (use httpOnly cookies in production)
-      // localStorage.setItem("authToken", response.data.token);
-      // setTimeout(() => navigate("/dashboard"), 2000)
+  //     setTimeout(() => navigate("/dashboard"), 2000);
+  //     // //send a request
+  //     // const response = await axios.post("/api/v1/auth/superadmin/login",{ email, password },
+  //     // { headers: { "Content-Type": "application/json"}}                                     
+  //     // );
+  //     // // Store token securely (use httpOnly cookies in production)
+  //     // localStorage.setItem("authToken", response.data.token);
+  //     // setTimeout(() => navigate("/dashboard"), 2000)
       
-    } catch (error) {
-      //handle error
-      if  (error.response) {
-        setError(error.response.data.error || "Login failed. Please try again.")
-      }else if (error.request) {
-        // No response (network error)
-        toast.error("Network error. Check your connection.");
-      } else {
-        // Other errors
-        toast.error("An unexpected error occurred.");
-      }
+  //   } catch (error) {
+  //     //handle error
+  //     if  (error.response) {
+  //       setError(error.response.data.error || "Login failed. Please try again.")
+  //     }else if (error.request) {
+  //       // No response (network error)
+  //       toast.error("Network error. Check your connection.");
+  //     } else {
+  //       // Other errors
+  //       toast.error("An unexpected error occurred.");
+  //     }
         
       
-    }
+  //   }
     
 
-   }
+  //  }
+
+  // Enhanced Token Manager
+const TokenManager = {
+  getToken: () => {
+    try {
+      return localStorage.getItem('authToken');
+    } catch (error) {
+      console.warn('Token retrieval failed:', error);
+      return null;
+    }
+  },
+
+  setToken: (token) => {
+    try {
+      if (token) {
+        localStorage.setItem('authToken', token);
+      }
+    } catch (error) {
+      console.warn('Token storage failed:', error);
+    }
+  },
+
+  clearAuthData: () => {
+    try {
+      localStorage.removeItem('authToken');
+    } catch (error) {
+      console.warn('Token removal failed:', error);
+    }
+  },
+
+  hasValidToken: () => {
+    const token = TokenManager.getToken();
+    return !!token; // Simple check for token existence
+  }
+};
+
+  const navigate = useNavigate();
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  if (!validateEmail(email)) {
+    toast.error("Please enter a valid email address.");
+    return;
+  }
+  
+  try {
+    const loadingToast = toast.loading("Logging in...");
+    
+    // Clear previous sessions before login attempt
+    TokenManager.clearAuthData();
+    
+    // Use axiosInstance for consistent interceptor handling
+    const response = await axiosInstance.post("/api/v1/auth/superadmin/login", {
+      email,
+      password
+    });
+
+    // Handle response validation
+    if (!response.data?.data?.token) {
+      throw new Error("Authentication failed: No token received");
+    }
+
+    // Store new token
+    TokenManager.setToken(response.data.data.token);
+    
+    toast.dismiss(loadingToast);
+    toast.success("Login successful! Redirecting...");
+    
+    setTimeout(() => navigate("/dashboard"), 2000);
+    
+  } catch (error) {
+    // Use error message from interceptor
+    const errorMessage = error.response?.data?.error?.message || 
+                         error.message || 
+                         "Login failed. Please try again.";
+    
+    toast.error(errorMessage);
+    
+    // For debugging only (remove in production)
+    console.error("Login error details:", {
+      status: error.response?.status,
+      data: error.response?.data,
+      request: error.request
+    });
+  }
+}
+
 
   return (
     <div>
@@ -119,7 +214,7 @@ function Login() {
                       placeholder="Enter your email address"
                     />
                   </div>
-                  <div className="flex justify-center items-center">
+                  <div className="flex justify-center items-center relative">
                     <input
                       type= {showPassword ? "text" : "password"}
                       name="password"
@@ -165,6 +260,46 @@ function Login() {
     </div>
   );
 }
+// Clean auth utilities
+export const AuthUtils = {
+  // Check if user is authenticated (backend will validate token expiry)
+  isAuthenticated: () => TokenManager.hasValidToken(),
+  
+  // Clean logout
+  logout: (navigate) => {
+    TokenManager.removeToken();
+    toast.success("Logged out successfully");
+    navigate("/login");
+  },
+  
+  // Get stored user info
+  getUserInfo: () => {
+    try {
+      const userInfo = localStorage.getItem("userInfo");
+      return userInfo ? JSON.parse(userInfo) : null;
+    } catch (error) {
+      console.warn("Failed to parse user info:", error);
+      return null;
+    }
+  },
+  
+  // Token refresh (if your backend supports it)
+  refreshToken: async () => {
+    try {
+      const response = await axiosInstance.post("/api/v1/auth/refresh");
+      if (response.data.token) {
+        TokenManager.setToken(response.data.token);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Token refresh failed:", error);
+      TokenManager.removeToken(); // Clean up invalid token
+      return false;
+    }
+  }
+};
+
 
 
 export default Login;

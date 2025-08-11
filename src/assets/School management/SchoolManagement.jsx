@@ -19,10 +19,7 @@ function SchoolManagement() {
           {/* submodules */}
           {isExpanded && (
             <div className='ml-12 mt-1'>
-          <Link 
-            to="schoolsregistered" 
-            className='block py-2 px-2 rounded hover:bg-blue-500 ml-2 m-0.5'
-          >
+          <Link   to="Schooltable" className='block py-2 px-2 rounded hover:bg-blue-500 ml-2 m-0.5'>
             Schools Registered
           </Link>
           <Link 
@@ -32,11 +29,24 @@ function SchoolManagement() {
             Add Schools
           </Link>
           <Link 
-            to="DownloadImport" 
+            to="viewschool" 
+            className='block py-2 px-2 rounded hover:bg-blue-500 ml-2 m-0.2'
+          >
+            View Schools
+          </Link>
+          
+          <Link 
+            to="Filesubmission" 
             className='block py-2 px-2 rounded hover:bg-blue-500 ml-2 m-0.3'
           >
             Download&Import Schools
           </Link>
+           {/* <Link 
+            to="headui" 
+            className='block py-2 px-2 rounded hover:bg-blue-500 ml-2 m-0.3'>
+            headui
+          </Link> */}
+          
           
         </div>
 

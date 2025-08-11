@@ -39,7 +39,7 @@ function Forgotpassword() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-        !,ternry operator ??
+        {/* !,ternry operator ?? */}
           {error ? <p className="text-red-500 text-sm">{error}</p>:""}
           {message && <p className="text-green-600 text-sm">{message}</p>}
           <Link to = "/" className=" flex justify-center text-blue-500 hover:underline" >Back to login </Link>

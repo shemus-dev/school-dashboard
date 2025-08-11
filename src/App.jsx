@@ -10,6 +10,13 @@ import Sidebar from "./assets/Dashboards/Sidebar";
 import ParentContainer from "./assets/Dashboards/ParentContainer";
 import Analytics from "./assets/Dashboards/Analytics";
 import AddSchool from "./assets/School management/AddSchool";
+import Filesubmission from "./assets/School management/Filesubmission";
+import SchoolTable from "./assets/School management/SchoolTable.jsx";
+import AddSchoolCategory from "./assets/System Configuration/AddSchoolCategory.jsx";
+import AddSchooltypes from "./assets/System Configuration/AddSchooltypes.jsx";
+import AddGrade from "./assets/Manage classes/AddGrade.jsx";
+import ViewSchool from "./assets/School management/ViewSchools.jsx";
+import Headui from "./assets/School management/Headui.jsx";
 function App() {
   return (
     <div className="min-h-screen h-screen">
@@ -20,6 +27,13 @@ function App() {
           <Route path="/dashboard" element ={<ParentContainer/>} >
              <Route path="analytics" element={<Analytics/>}/>
              <Route path="addschools" element={<AddSchool/>}/>
+             <Route path="Filesubmission" element={<Filesubmission/>}/>
+             <Route path="Schooltable" element={<SchoolTable/>}/>
+             <Route path="addschoolcategories" element={<AddSchoolCategory/>}/>
+             <Route path="addschooltypes" element={<AddSchooltypes/>}/> 
+             <Route path= "addgrade" element = {<AddGrade/>}/> 
+             <Route path= "viewschool" element = {<ViewSchool/>}/> 
+             <Route path= "headui" element = {<Headui/>}/> 
           </Route>
         </Routes>
     

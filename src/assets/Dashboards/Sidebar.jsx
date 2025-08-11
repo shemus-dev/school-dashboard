@@ -10,7 +10,7 @@ import DashboardModule from './DashboardModule';
 import SchoolManagement from '../School management/SchoolManagement';
 import UserManagement from '../User Management/UserManagement';
 import SystemConfiguration from '../System Configuration/SystemConfiguration';
-import ManageClases from '../Manage classes/ManageClases';
+import ManageClass from '../Manage classes/ManageClass';
 import Reports from '../Reports/Reports';
 
 
@@ -28,16 +28,16 @@ function Sidebar() {
                    <DashboardModule />
                </li>
                <li>
-                   <SchoolManagement/>
+                    <SchoolManagement/>
                </li>
                <li >
-                   <UserManagement/>                                                                                                                                       
+                      <ManageClass/>                                                                                                                                   
                </li>
                <li>
                    <SystemConfiguration/>
                </li>
                <li >
-                   <ManageClases/>
+                  {/* <UserManagement/>  */}
                </li>
                 <li>
                    <Reports/>
